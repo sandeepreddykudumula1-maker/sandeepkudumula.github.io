@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Engineer Portfolio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --blue: #0a0e27;
+    --cyan: #00d4ff;
+    --purple: #7b2ff7;
+    --pink: #f72fff;
+    --text: #e0e6ff;
+    --card: rgba(255,255,255,0.05);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--blue); color: var(--text); font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(10,14,39,0.85); backdrop-filter: blur(12px);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 2.5rem; border-bottom: 1px solid rgba(0,212,255,0.15);
+  }
+  .logo { font-size: 1.3rem; font-weight: 700; background: linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav a { color: var(--text); text-decoration: none; font-size: 0.9rem; letter-spacing: 0.05em; transition: color 0.3s; cursor: pointer; }
+  nav a:hover { color: var(--cyan); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; text-align: center; padding: 2rem;
+  }
+  canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-content h1 { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
+  .hero-content h1 span { background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-content .subtitle { font-size: clamp(1rem, 2.5vw, 1.4rem); color: var(--cyan); letter-spacing: 0.15em; margin-bottom: 1rem; text-transform: uppercase; }
+  .hero-content .tagline { font-size: 1.1rem; color: rgba(224,230,255,0.7); max-width: 550px; margin: 0 auto 2rem; }
+  .btn { display: inline-block; padding: 0.85rem 2.2rem; border-radius: 50px; font-weight: 700; text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; font-size: 1rem; }
+  .btn-primary { background: linear-gradient(135deg, var(--cyan), var(--purple)); color: #fff; box-shadow: 0 0 25px rgba(0,212,255,0.4); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(0,212,255,0.6); }
+  .btn-outline { background: transparent; border: 2px solid var(--cyan); color: var(--cyan); margin-left: 1rem; }
+  .btn-outline:hover { background: var(--cyan); color: var(--blue); transform: translateY(-3px); }
+
+  /* SECTIONS */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-title { text-align: center; margin-bottom: 3.5rem; }
+  .section-title h2 { font-size: 2.5rem; font-weight: 800; }
+  .section-title h2 span { background: linear-gradient(90deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .section-title p { color: rgba(224,230,255,0.6); margin-top: 0.5rem; }
+  .divider { width: 60px; height: 4px; background: linear-gradient(90deg, var(--cyan), var(--purple)); border-radius: 2px; margin: 1rem auto 0; }
+
+  /* ABOUT */
+  #about { background: rgba(123,47,247,0.05); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 3rem; align-items: center; }
+  .photo-wrap { display: flex; justify-content: center; }
+  .photo-box {
+    width: 220px; height: 220px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem; box-shadow: 0 0 50px rgba(0,212,255,0.35);
+    position: relative;
+  }
+  .photo-box::after {
+    content: ''; position: absolute; inset: -8px; border-radius: 50%;
+    border: 2px dashed rgba(0,212,255,0.4); animation: spin 12s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .about-text h3 { font-size: 1.8rem; margin-bottom: 1rem; color: var(--cyan); }
+  .about-text p { line-height: 1.8; color: rgba(224,230,255,0.8); margin-bottom: 1rem; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 1.5rem; }
+  .info-item { display: flex; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
+  .info-item span:first-child { color: var(--cyan); font-weight: 700; }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+  .skill-card { background: var(--card); border: 1px solid rgba(0,212,255,0.12); border-radius: 16px; padding: 1.8rem; backdrop-filter: blur(10px); transition: transform 0.3s, box-shadow 0.3s; }
+  .skill-card:hover { transform: translateY(-6px); box-shadow: 0 10px 40px rgba(0,212,255,0.15); }
+  .skill-card h4 { color: var(--cyan); margin-bottom: 1.2rem; font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .skill-bar { margin-bottom: 1rem; }
+  .skill-bar label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .bar-bg { background: rgba(255,255,255,0.08); border-radius: 50px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg, var(--cyan), var(--purple)); transition: width 1.5s ease; width: 0; }
+  .cert-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem; }
+  .badge { background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(123,47,247,0.15)); border: 1px solid rgba(0,212,255,0.3); border-radius: 50px; padding: 0.4rem 1rem; font-size: 0.8rem; color: var(--cyan); font-weight: 600; }
+
+  /* PROJECTS */
+  #projects { background: rgba(0,212,255,0.03); }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+  .project-card { background: var(--card); border: 1px solid rgba(123,47,247,0.2); border-radius: 20px; padding: 2rem; transition: all 0.3s; position: relative; overflow: hidden; }
+  .project-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink)); }
+  .project-card:hover { transform: translateY(-8px); box-shadow: 0 15px 50px rgba(123,47,247,0.2); }
+  .proj-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .project-card h3 { font-size: 1.2rem; margin-bottom: 0.7rem; color: #fff; }
+  .project-card p { font-size: 0.9rem; color: rgba(224,230,255,0.7); line-height: 1.7; margin-bottom: 1.2rem; }
+  .tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag { background: rgba(123,47,247,0.2); border: 1px solid rgba(123,47,247,0.4); border-radius: 6px; padding: 0.25rem 0.7rem; font-size: 0.75rem; color: #c4aaff; }
+
+  /* EXPERIENCE */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--cyan), var(--purple)); }
+  .tl-item { position: relative; margin-bottom: 2.5rem; padding-left: 1.5rem; }
+  .tl-dot { position: absolute; left: -2.45rem; top: 0.3rem; width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+  .tl-item h4 { font-size: 1.1rem; color: #fff; }
+  .tl-item .company { color: var(--cyan); font-size: 0.9rem; margin: 0.2rem 0; }
+  .tl-item .period { font-size: 0.8rem; color: rgba(224,230,255,0.5); margin-bottom: 0.6rem; }
+  .tl-item p { font-size: 0.9rem; color: rgba(224,230,255,0.75); line-height: 1.7; }
+
+  /* CONTACT */
+  #contact { background: rgba(123,47,247,0.05); }
+  .contact-wrap { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; }
+  .contact-info h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  .contact-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; padding: 1rem; background: var(--card); border-radius: 12px; border: 1px solid rgba(0,212,255,0.1); }
+  .contact-item .icon { width: 45px; height: 45px; border-radius: 12px; background: linear-gradient(135deg, var(--cyan), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .contact-item .info span { display: block; font-size: 0.75rem; color: rgba(224,230,255,0.5); }
+  .contact-item .info strong { font-size: 0.95rem; }
+  .contact-form { background: var(--card); border: 1px solid rgba(0,212,255,0.12); border-radius: 20px; padding: 2rem; }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label { display: block; font-size: 0.85rem; color: var(--cyan); margin-bottom: 0.4rem; }
+  .form-group input, .form-group textarea {
+    width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px; padding: 0.85rem 1rem; color: var(--text); font-size: 0.95rem;
+    transition: border-color 0.3s; outline: none; font-family: inherit;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,212,255,0.1); }
+  .form-group textarea { height: 120px; resize: vertical; }
+  #send-btn { width: 100%; }
+
+  /* FOOTER */
+  footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(0,212,255,0.1); color: rgba(224,230,255,0.4); font-size: 0.85rem; }
+  footer span { color: var(--cyan); }
+
+  @media(max-width: 768px) {
+    .about-grid, .contact-wrap { grid-template-columns: 1fr; }
+    nav ul { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Sandeep Reddy</div>
+  <ul>
+    <li><a onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About</a></li>
+    <li><a onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">Skills</a></li>
+    <li><a onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">Projects</a></li>
+    <li><a onclick="document.getElementById('experience').scrollIntoView({behavior:'smooth'})">Experience</a></li>
+    <li><a onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="net-canvas"></canvas>
+  <div class="hero-content">
+    <p class="subtitle">Network Engineer</p>
+    <h1>Building the <span>Networks</span><br>of Tomorrow</h1>
+    <p class="tagline">Designing, securing, and optimizing enterprise-grade network infrastructures with precision and reliability.</p>
+    <button class="btn btn-primary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View My Work</button>
+    <button class="btn btn-outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get In Touch</button>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-title">
+      <h2>About <span>Me</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="about-grid">
+      <div class="photo-wrap">
+        <div class="photo-box">👨‍💻</div>
+      </div>
+      <div class="about-text">
+        <h3>Hi, I'm Sandeep Reddy Kudumula</h3>
+        <p>I'm a passionate Network Engineer based in Providence, Rhode Island, with hands-on experience designing, implementing, and managing robust network infrastructures for enterprise environments.</p>
+        <p>My expertise spans routing & switching, network security, and firewall management — always focused on building resilient, scalable, and secure systems.</p>
+        <div class="info-grid">
+          <div class="info-item"><span>📍</span><span>Providence, Rhode Island</span></div>
+          <div class="info-item"><span>🎓</span><span>Network Engineering</span></div>
+          <div class="info-item"><span>📧</span><span>sandeepkudumula2@gmail.com</span></div>
+          <div class="info-item"><span>✅</span><span>Available for Hire</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-title">
+      <h2>Skills & <span>Certifications</span></h2>
+      <div class="divider"></div>
+      <p>Technologies and tools I work with every day</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h4>🔌 Networking</h4>
+        <div class="skill-bar"><label><span>Cisco IOS/IOS-XE</span><span>95%</span></label><div class="bar-bg"><div class="bar-fill" data-w="95"></div></div></div>
+        <div class="skill-bar"><label><span>BGP / OSPF / EIGRP</span><span>90%</span></label><div class="bar-bg"><div class="bar-fill" data-w="90"></div></div></div>
+        <div class="skill-bar"><label><span>MPLS / SD-WAN</span><span>85%</span></label><div class="bar-bg"><div class="bar-fill" data-w="85"></div></div></div>
+        <div class="skill-bar"><label><span>Juniper JunOS</span><span>80%</span></label><div class="bar-bg"><div class="bar-fill" data-w="80"></div></div></div>
+      </div>
+      <div class="skill-card">
+        <h4>🛡️ Security</h4>
+        <div class="skill-bar"><label><span>Firewall (Fortinet/Palo Alto)</span><span>90%</span></label><div class="bar-bg"><div class="bar-fill" data-w="90"></div></div></div>
+        <div class="skill-bar"><label><span>VPN / Zero Trust</span><span>88%</span></label><div class="bar-bg"><div class="bar-fill" data-w="88"></div></div></div>
+        <div class="skill-bar"><label><span>IDS/IPS Systems</span><span>82%</span></label><div class="bar-bg"><div class="bar-fill" data-w="82"></div></div></div>
+        <div class="skill-bar"><label><span>Network Monitoring</span><span>92%</span></label><div class="bar-bg"><div class="bar-fill" data-w="92"></div></div></div>
+      </div>
+      <div class="skill-card">
+        <h4>☁️ Cloud & Automation</h4>
+        <div class="skill-bar"><label><span>AWS Networking</span><span>80%</span></label><div class="bar-bg"><div class="bar-fill" data-w="80"></div></div></div>
+        <div class="skill-bar"><label><span>Python / Ansible</span><span>75%</span></label><div class="bar-bg"><div class="bar-fill" data-w="75"></div></div></div>
+        <div class="skill-bar"><label><span>Azure / GCP Networking</span><span>70%</span></label><div class="bar-bg"><div class="bar-fill" data-w="70"></div></div></div>
+        <div class="skill-bar"><label><span>Terraform</span><span>65%</span></label><div class="bar-bg"><div class="bar-fill" data-w="65"></div></div></div>
+      </div>
+      <div class="skill-card">
+        <h4>🏆 Certifications</h4>
+        <div class="cert-badges">
+          <span class="badge">CCNA</span>
+          <span class="badge">CCNP</span>
+          <span class="badge">Fortinet Certified Associate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-title">
+      <h2>Featured <span>Projects</span></h2>
+      <div class="divider"></div>
+      <p>Real-world network solutions I've designed and deployed</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="proj-icon">🏢</div>
+        <h3>Enterprise Campus Network Redesign</h3>
+        <p>Redesigned a 3-tier campus network for a 2,000-user organization, improving uptime to 99.98% and reducing latency by 40%.</p>
+        <div class="tech-tags"><span class="tag">Cisco Catalyst</span><span class="tag">OSPF</span><span class="tag">STP</span><span class="tag">QoS</span></div>
+      </div>
+      <div class="project-card">
+        <div class="proj-icon">🔒</div>
+        <h3>Zero Trust Security Implementation</h3>
+        <p>Deployed a Zero Trust network architecture across 12 branch offices, eliminating lateral movement risks and achieving full micro-segmentation.</p>
+        <div class="tech-tags"><span class="tag">Palo Alto</span><span class="tag">Zero Trust</span><span class="tag">802.1X</span><span class="tag">VLAN</span></div>
+      </div>
+      <div class="project-card">
+        <div class="proj-icon">☁️</div>
+        <h3>Hybrid Cloud Network Integration</h3>
+        <p>Built a hybrid cloud network bridging on-premises data centers with AWS and Azure, using Direct Connect and ExpressRoute.</p>
+        <div class="tech-tags"><span class="tag">AWS Direct Connect</span><span class="tag">BGP</span><span class="tag">Azure</span><span class="tag">VPN</span></div>
+      </div>
+      <div class="project-card">
+        <div class="proj-icon">⚡</div>
+        <h3>SD-WAN Rollout (50 Sites)</h3>
+        <p>Led a nationwide SD-WAN deployment across 50 branch sites, reducing WAN costs by 35% and improving application performance.</p>
+        <div class="tech-tags"><span class="tag">Viptela</span><span class="tag">SD-WAN</span><span class="tag">MPLS</span><span class="tag">Automation</span></div>
+      </div>
+      <div class="project-card">
+        <div class="proj-icon">🤖</div>
+        <h3>Network Automation with Ansible</h3>
+        <p>Developed Python and Ansible playbooks to automate configuration management for 200+ network devices, cutting provisioning time by 70%.</p>
+        <div class="tech-tags"><span class="tag">Python</span><span class="tag">Ansible</span><span class="tag">NETCONF</span><span class="tag">REST API</span></div>
+      </div>
+      <div class="project-card">
+        <div class="proj-icon">📡</div>
+        <h3>Data Center Network Buildout</h3>
+        <p>Architected and deployed a spine-leaf data center network supporting 10,000+ VMs with sub-millisecond latency and full redundancy.</p>
+        <div class="tech-tags"><span class="tag">VXLAN</span><span class="tag">BGP EVPN</span><span class="tag">Nexus</span><span class="tag">LACP</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="section-title">
+      <h2>Work <span>Experience</span></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <h4>Network Engineer</h4>
+        <p class="company">Brightstar Lottery</p>
+        <p class="period">Sep 2025 – Present</p>
+        <p>Designing and maintaining network infrastructure to support lottery operations. Responsible for network security, performance monitoring, and ensuring high availability across all systems.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <h4>Network Engineer</h4>
+        <p class="company">Elevance Health</p>
+        <p class="period">Dec 2023 – Sep 2025</p>
+        <p>Managed and optimized enterprise network infrastructure for one of the nation's largest health insurance providers. Handled routing, switching, firewall policies, and network security compliance in a highly regulated environment.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <h4>Network Engineer</h4>
+        <p class="company">LTIMindtree</p>
+        <p class="period">Feb 2022 – Jan 2023</p>
+        <p>Worked on network design, implementation, and support for enterprise clients. Configured and maintained Cisco routers and switches, and assisted with troubleshooting complex network issues.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <h4>Network Engineer</h4>
+        <p class="company">Max Insurance</p>
+        <p class="period">Oct 2020 – Dec 2021</p>
+        <p>Supported network operations and infrastructure for the insurance firm. Handled day-to-day network administration, VPN configuration, and firewall management.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-title">
+      <h2>Get In <span>Touch</span></h2>
+      <div class="divider"></div>
+      <p>Let's connect and build something great together</p>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <h3>Let's Talk Networks 🌐</h3>
+        <div class="contact-item">
+          <div class="icon">📧</div>
+          <div class="info"><span>Email</span><strong>sandeepkudumula2@gmail.com</strong></div>
+        </div>
+        <div class="contact-item">
+          <div class="icon">📱</div>
+          <div class="info"><span>Phone</span><strong>+1 (660) 528-1554</strong></div>
+        </div>
+        <div class="contact-item">
+          <div class="icon">💼</div>
+          <div class="info"><span>LinkedIn</span><strong>linkedin.com/in/sandeepkudumula</strong></div>
+        </div>
+        <div class="contact-item">
+          <div class="icon">📍</div>
+          <div class="info"><span>Location</span><strong>Providence, Rhode Island</strong></div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="john@example.com">
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" placeholder="Project Inquiry">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="btn btn-primary" id="send-btn" onclick="handleSend()">Send Message 🚀</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>Alex Carter</span> · Network Engineer · Built with passion & precision</p>
+</footer>
+
+<script>
+// ANIMATED NETWORK CANVAS
+const canvas = document.getElementById('net-canvas');
+const ctx = canvas.getContext('2d');
+let nodes = [], W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+for (let i = 0; i < 60; i++) {
+  nodes.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5, r: Math.random()*2+1.5 });
+}
+
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(10,14,39,0.2)';
+  ctx.fillRect(0,0,W,H);
+  for (let a of nodes) {
+    a.x += a.vx; a.y += a.vy;
+    if (a.x < 0 || a.x > W) a.vx *= -1;
+    if (a.y < 0 || a.y > H) a.vy *= -1;
+    for (let b of nodes) {
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if (d < 140) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = `rgba(0,212,255,${0.15*(1-d/140)})`;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+    }
+    ctx.beginPath();
+    ctx.arc(a.x, a.y, a.r, 0, Math.PI*2);
+    ctx.fillStyle = '#00d4ff';
+    ctx.shadowBlur = 8; ctx.shadowColor = '#00d4ff';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+// SKILL BARS ANIMATION
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.bar-fill').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.skill-card').forEach(c => observer.observe(c));
+
+// CONTACT FORM
+function handleSend() {
+  const btn = document.getElementById('send-btn');
+  btn.textContent = '✅ Message Sent!';
+  btn.style.background = 'linear-gradient(135deg,#00c853,#00897b)';
+  setTimeout(() => { btn.textContent = 'Send Message 🚀'; btn.style.background = ''; }, 3000);
+}
+</script>
+</body>
+</html>
