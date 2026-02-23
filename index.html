@@ -524,18 +524,21 @@ footer .fr a:hover{color:var(--cyan);}
 
 <script>
 // TYPING EFFECT
-const fullName = 'Sandeep Reddy K';
-const highlighted = 'Reddy K';
+const lines = ['Sandeep', 'Reddy Kudumula'];
 const el = document.getElementById('typed-name');
-let i = 0;
+let lineIdx = 0, charIdx = 0, output = ['', ''];
 function type() {
-  if (i <= fullName.length) {
-    const current = fullName.slice(0, i);
-    const plain = current.replace(highlighted, '');
-    const hi = current.includes('R') ? current.slice(current.indexOf('R')) : '';
-    el.innerHTML = plain + (hi ? `<span class="name-highlight">${hi}</span>` : '');
-    i++;
-    setTimeout(type, i === 8 ? 300 : 100);
+  if (lineIdx < lines.length) {
+    if (charIdx <= lines[lineIdx].length) {
+      output[lineIdx] = lines[lineIdx].slice(0, charIdx);
+      el.innerHTML = `${output[0]}${output[0] ? '<br>' : ''}<span class="name-highlight">${output[1]}</span>`;
+      charIdx++;
+      setTimeout(type, 100);
+    } else {
+      lineIdx++;
+      charIdx = 0;
+      setTimeout(type, 200);
+    }
   }
 }
 setTimeout(type, 600);
