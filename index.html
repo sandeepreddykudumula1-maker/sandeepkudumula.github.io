@@ -58,7 +58,8 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.4;}
 .btn-primary:hover{background:#33d4ff;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,200,255,0.4);}
 .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
 .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px);}
-.hero-certs{position:absolute;right:4rem;top:50%;transform:translateY(-50%);z-index:2;display:flex;flex-direction:column;gap:0.8rem;}
+.cursor{display:inline-block;width:3px;background:var(--cyan);margin-left:2px;animation:blink 0.8s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}position:absolute;right:4rem;top:50%;transform:translateY(-50%);z-index:2;display:flex;flex-direction:column;gap:0.8rem;}
 .cert-pill{background:rgba(12,17,32,0.85);border:1px solid var(--border);border-radius:10px;padding:0.8rem 1.2rem;display:flex;align-items:center;gap:0.8rem;backdrop-filter:blur(10px);transition:border-color 0.3s;}
 .cert-pill:hover{border-color:var(--cyan);}
 .cert-pill .cert-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
@@ -229,7 +230,7 @@ footer .fr a:hover{color:var(--cyan);}
   <canvas id="net-canvas"></canvas>
   <div class="hero-inner">
     <div class="hero-eyebrow"><div class="line"></div><span>Network Engineer · 4+ Years Experience</span></div>
-    <h1>Sandeep<br><span class="name-highlight">Reddy K</span></h1>
+    <h1><span id="typed-name"></span><span class="cursor">|</span></h1>
     <p class="hero-desc">Designing, implementing, and securing enterprise-grade network infrastructures across on-premises and cloud environments. Specialized in Cisco, Palo Alto, SD-WAN, AWS, and Azure networking.</p>
     <div class="hero-stats">
       <div class="stat"><div class="num">4+</div><div class="lbl">Years Experience</div></div>
@@ -522,6 +523,23 @@ footer .fr a:hover{color:var(--cyan);}
 </div>
 
 <script>
+// TYPING EFFECT
+const fullName = 'Sandeep Reddy K';
+const highlighted = 'Reddy K';
+const el = document.getElementById('typed-name');
+let i = 0;
+function type() {
+  if (i <= fullName.length) {
+    const current = fullName.slice(0, i);
+    const plain = current.replace(highlighted, '');
+    const hi = current.includes('R') ? current.slice(current.indexOf('R')) : '';
+    el.innerHTML = plain + (hi ? `<span class="name-highlight">${hi}</span>` : '');
+    i++;
+    setTimeout(type, i === 8 ? 300 : 100);
+  }
+}
+setTimeout(type, 600);
+
 // CANVAS
 const canvas=document.getElementById('net-canvas'),ctx=canvas.getContext('2d');
 let nodes=[],W,H;
